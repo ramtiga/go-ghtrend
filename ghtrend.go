@@ -6,6 +6,7 @@ import (
         "os"
         "github.com/PuerkitoBio/goquery"
         "os/exec"
+        "runtime"
 )
 
 type RepoInf struct {
@@ -131,7 +132,15 @@ func getBrowsUrl(idx int) string {
 }
 
 func openBrowser(url string) {
-        exec.Command("open", url).Run()
+        os := runtime.GOOS
+        switch {
+        case os == "windows":
+                exec.Command("cmd", "/c", "start", url).Run()
+        case os == "darwin":
+                exec.Command("open", url).Run()
+        case os == "windows":
+                exec.Command("xdg-open", url).Run()
+        }
 }
 
 func showVersion() {
