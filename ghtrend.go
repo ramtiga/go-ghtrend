@@ -138,7 +138,7 @@ func openBrowser(url string) {
                 exec.Command("cmd", "/c", "start", url).Run()
         case os == "darwin":
                 exec.Command("open", url).Run()
-        case os == "windows":
+        case os == "linux":
                 exec.Command("xdg-open", url).Run()
         }
 }
