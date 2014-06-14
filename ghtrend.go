@@ -18,7 +18,6 @@ type RepoInf struct {
 
 const (
         TREND_MAX_NUM = 25
-        VERSION = "0.0.1"
         REPO_NAME_MAX_LEN = 35
 )
 
@@ -171,6 +170,3 @@ func openBrowser(url string) {
         }
 }
 
-func showVersion() {
-        fmt.Printf("ghtrend Ver %s\n", VERSION)
-}
