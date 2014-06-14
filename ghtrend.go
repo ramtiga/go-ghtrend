@@ -13,16 +13,18 @@ type RepoInf struct {
         RepositoryName string
         Description    string
         RepoUrl        string
+        Lang           string
 }
 
 const (
         TREND_MAX_NUM = 25
         VERSION = "0.0.1"
+        REPO_NAME_MAX_LEN = 35
 )
 
 var repoInf []RepoInf
 var baseUrl string = "https://github.com/trending"
-
+var repoNameMaxLen int
 
 var (
         lang    = flag.String("l", "all", "Select language")
@@ -93,12 +95,20 @@ func getMemory(num int) []RepoInf {
 }
 
 func getPage(url string, num int) {
+        repoNameMaxLen = REPO_NAME_MAX_LEN
+        var repolen int
         doc, _ := goquery.NewDocument(url)
         doc.Find(".leaderboard-list-content").Each(func(i int, s *goquery.Selection) {
                 if i < num {
                         repoInf[i].RepositoryName = s.Find("a[class='repository-name']").Text()
                         repoInf[i].Description = s.Find("p[class='repo-leaderboard-description']").Text()
                         repoInf[i].RepoUrl = s.Find("a[class='repository-name']").Text()
+                        repoInf[i].Lang = s.Find("span[class='title-meta']").Text()
+
+                        repolen = len(repoInf[i].RepositoryName) 
+                        if repolen > repoNameMaxLen {
+                                repoNameMaxLen = repolen
+                        }
                 }
 
         })
@@ -106,23 +116,41 @@ func getPage(url string, num int) {
 
 func showResult() {
         fmt.Println("Trending " + *lang + " repositories on GitHub today")
-        line := ""
-        for i := 0; i < 56; i++ {
-                line += "-"
-        }
-        fmt.Println(line)
 
         spaces := ""
-        for i, rp := range repoInf {
-                fmt.Println(fmt.Sprint(i + 1) + ": " + rp.RepositoryName)
+        line := ""
+        for i := 0; i < repoNameMaxLen - 4; i++ {
+                spaces += " "
+                line += "-"
+        }
 
-                if (i + 1) >= 10 {
-                        spaces = "    "
-                } else {
-                        spaces = "   "
+        title := ""
+        lines := ""
+        if *lang == "all" {
+                title = "No. Name " + spaces + " Lang"
+                lines = "--- -----" + line  + " ------------" 
+        } else {
+                title = "No. Name "
+                lines = "--- -----" + line
+        }
+
+        fmt.Println(title)
+        fmt.Println(lines)
+
+        for i, rp := range repoInf {
+                spaces = "  "
+                for j := 0; j < repoNameMaxLen - len(rp.RepositoryName); j++ {
+                        spaces += " "
                 }
+
+                if *lang == "all" {
+                        fmt.Println(fmt.Sprintf("%3d", i + 1) + " " + rp.RepositoryName + spaces + rp.Lang)
+                } else {
+                        fmt.Println(fmt.Sprintf("%3d", i + 1) + " " + rp.RepositoryName)
+                }
+
                 if *desc {
-                        fmt.Println(spaces + rp.Description)
+                        fmt.Println("    " + rp.Description)
                 }
         }
 }
