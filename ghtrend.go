@@ -14,11 +14,14 @@ type RepoInf struct {
         Description    string
         RepoUrl        string
         Lang           string
+        Star           string
+        Fork           string
 }
 
 const (
         TREND_MAX_NUM = 25
         REPO_NAME_MAX_LEN = 35
+        LANG_LEN_MAX = 12
 )
 
 var repoInf []RepoInf
@@ -103,6 +106,8 @@ func getPage(url string, num int) {
                         repoInf[i].Description = s.Find("p[class='repo-leaderboard-description']").Text()
                         repoInf[i].RepoUrl = s.Find("a[class='repository-name']").Text()
                         repoInf[i].Lang = s.Find("span[class='title-meta']").Text()
+                        repoInf[i].Star = s.Find(".repo-leaderboard-meta .repo-leaderboard-meta-item .octicon-star").Parent().Text()
+                        repoInf[i].Fork = s.Find(".repo-leaderboard-meta .repo-leaderboard-meta-item .octicon-git-branch").Parent().Text()
 
                         repolen = len(repoInf[i].RepositoryName) 
                         if repolen > repoNameMaxLen {
@@ -116,7 +121,7 @@ func getPage(url string, num int) {
 func showResult() {
         fmt.Println("Trending " + *lang + " repositories on GitHub today")
 
-        spaces := ""
+        spaces := " "
         line := ""
         for i := 0; i < repoNameMaxLen - 4; i++ {
                 spaces += " "
@@ -125,12 +130,15 @@ func showResult() {
 
         title := ""
         lines := ""
+        title_starfork := "Star Fork"
+        line_starfork := " ---- ----"
+
         if *lang == "all" {
-                title = "No. Name " + spaces + " Lang"
-                lines = "--- -----" + line  + " ------------" 
+                title = "No. Name " + spaces + "Lang         " + title_starfork
+                lines = "--- -----" + line  + " ------------" + line_starfork
         } else {
-                title = "No. Name "
-                lines = "--- -----" + line
+                title = "No. Name " + spaces + title_starfork
+                lines = "--- -----" + line + line_starfork
         }
 
         fmt.Println(title)
@@ -141,11 +149,15 @@ func showResult() {
                 for j := 0; j < repoNameMaxLen - len(rp.RepositoryName); j++ {
                         spaces += " "
                 }
+                spaces2 := " "
 
                 if *lang == "all" {
-                        fmt.Println(fmt.Sprintf("%3d", i + 1) + " " + rp.RepositoryName + spaces + rp.Lang)
+                        for k := 0; k < LANG_LEN_MAX - len(rp.Lang); k++ {
+                                spaces2 += " "
+                        }
+                        fmt.Println(fmt.Sprintf("%3d", i + 1) + " " + rp.RepositoryName + spaces + rp.Lang + spaces2 + fmt.Sprintf("%4s", rp.Star) + " " + fmt.Sprintf("%4s", rp.Fork))
                 } else {
-                        fmt.Println(fmt.Sprintf("%3d", i + 1) + " " + rp.RepositoryName)
+                        fmt.Println(fmt.Sprintf("%3d", i + 1) + " " + rp.RepositoryName + spaces + fmt.Sprintf("%4s", rp.Star) + " " + fmt.Sprintf("%4s", rp.Fork))
                 }
 
                 if *desc {
