@@ -8,7 +8,7 @@ Get Trending repositories on Github written by Go.
 
 ## Usage
 
-    $ ghtrend -h
+    $ go-ghtrend -h
 
     usage: ghtrend <command> [options] <args>
     
@@ -22,19 +22,20 @@ Get Trending repositories on Github written by Go.
 
 ## Example
 
-    $ ghtrend -l go -n 5 -d
+    $ go-ghtrend -l go
     Trending go repositories on GitHub today
-    --------------------------------------------------------
-    1: nytlabs/streamtools
-       tools for working with streams of data
-    2: oysterbooks/halfshell
-       A proxy server for processing images on the fly.
-    3: dotcloud/docker
-       Docker - the open-source application container engine
-    4: mitchellh/go-mruby
-       Go (golang) bindings to mruby.
-    5: drone/drone
-       Drone is a Continuous Integration platform built on Docker)
+    No. Name                                 Star Fork
+    --- ------------------------------------ ---- ----
+      1 GoogleCloudPlatform/kubernetes         46    4
+      2 aybabtme/uniplot                       46
+      3 shell909090/goproxy                    44    1
+      4 andlabs/ui                             31
+      5 dotcloud/docker                        24   13
+      6 hellogcc/100-gdb-tips                  24    5
+      7 lestrrat/peco                          26
+      8 google/cadvisor                        20
+      9 docker/libswarm                        18    2
+     10 calmh/syncthing                        16    1
 
 ## License
 
