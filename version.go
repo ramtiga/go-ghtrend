@@ -1,12 +1,11 @@
 package main
 
 import (
-        "fmt"
+	"fmt"
 )
 
 const VERSION = "0.0.2"
 
 func showVersion() {
-        fmt.Printf("ghtrend Ver %s\n", VERSION)
+	fmt.Printf("ghtrend Ver %s\n", VERSION)
 }
-
