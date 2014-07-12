@@ -4,9 +4,8 @@ import (
 	"flag"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
+	"github.com/skratchdot/open-golang/open"
 	"os"
-	"os/exec"
-	"runtime"
 )
 
 type RepoInf struct {
@@ -171,13 +170,5 @@ func getBrowsUrl(idx int) string {
 }
 
 func openBrowser(url string) {
-	os := runtime.GOOS
-	switch {
-	case os == "windows":
-		exec.Command("cmd", "/c", "start", url).Run()
-	case os == "darwin":
-		exec.Command("open", url).Run()
-	case os == "linux":
-		exec.Command("xdg-open", url).Run()
-	}
+	open.Run(url)
 }
